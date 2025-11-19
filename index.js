@@ -19,7 +19,6 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
-
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -45,7 +44,7 @@ run().catch(console.dir);
 // --------------
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('The events data base running well!')
 })
 
 app.listen(port, () => {

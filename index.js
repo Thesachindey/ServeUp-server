@@ -23,7 +23,23 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        // ---------------
+        // --------------- start from here----------------
+        //database connection
+        const db = client.db('events-db')
+        const eventsCollection = db.collection('events')
+        //-------------------
+        //database theke data niye asbo, data manipulate korbo, data add korbo, by api methods
+
+        //GET all events data
+        app.get('/events', async (req, res) => {
+            //step1: database (eventsCollection) theke data niye asbo 
+            const result = await eventsCollection.find().toArray()
+            //step2: data ke client k pathabo
+            res.send(result)
+        })
+
+
+
 
 
 

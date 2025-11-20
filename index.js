@@ -27,14 +27,35 @@ async function run() {
         //database connection
         const db = client.db('events-db')
         const eventsCollection = db.collection('events')
+        
         //-------------------
         //database theke data niye asbo, data manipulate korbo, data add korbo, by api methods
 
-        //GET all events data
+        //GET all events data [find().toArray(), findOne().toArray()] by using GET api methods
         app.get('/events', async (req, res) => {
             //step1: database (eventsCollection) theke data niye asbo 
             const result = await eventsCollection.find().toArray()
             //step2: data ke client k pathabo
+            res.send(result)
+        })
+
+// details page er jonno specific data niye asbo by id
+app.get('/events/:id', async(req,res)=>{
+    // step1: id ke niye asbo from clint
+    const id= req.params.id;
+})
+
+
+        //POST api method use kore data servere anbo and mongo db te add korbo [insertMany(), insertOne()] method diye.
+
+        app.post('/events', async (req, res) => {
+            // step1: client theke data niye asbo
+            const newEvent = req.body;
+            console.log(newEvent)
+            // step2: oi data ke database (eventsCollection) te add korbo
+            const result = await eventsCollection.insertOne(newEvent)
+
+            // step3: database theke result ke client k pathabo
             res.send(result)
         })
 

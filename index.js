@@ -74,6 +74,23 @@ async function run() {
             res.send(result)
         })
 
+        app.get("/joined-events/check", async (req, res) => {
+            const { eventId, email } = req.query;
+
+            const exists = await joinedEventsCollection.findOne({
+                eventId: eventId,
+                userEmail: email,
+            });
+            res.send({ joined: !!exists });
+        });
+
+        // ---------------
+        app.get('/joined-events', async (req, res) => {
+            //step1: database (joinedEventsCollection) theke data niye asbo 
+            const result = await joinedEventsCollection.find().toArray()
+            //step2: data ke client k pathabo
+            res.send(result)
+        })
        
 
 

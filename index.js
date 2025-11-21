@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 require("dotenv").config()
@@ -27,11 +27,13 @@ async function run() {
         //database connection
         const db = client.db('events-db')
         const eventsCollection = db.collection('events')
-        
+        const joinedEventsCollection = db.collection('joined-events')
+
         //-------------------
         //database theke data niye asbo, data manipulate korbo, data add korbo, by api methods
 
         //GET all events data [find().toArray(), findOne().toArray()] by using GET api methods
+        //we can check GET api data by browser directly
         app.get('/events', async (req, res) => {
             //step1: database (eventsCollection) theke data niye asbo 
             const result = await eventsCollection.find().toArray()
@@ -39,11 +41,16 @@ async function run() {
             res.send(result)
         })
 
-// details page er jonno specific data niye asbo by id
-app.get('/events/:id', async(req,res)=>{
-    // step1: id ke niye asbo from clint
-    const id= req.params.id;
-})
+        // details page er jonno specific data niye asbo by id
+        app.get('/events/:id', async (req, res) => {
+            //step1: url theke id ta niye asbo
+            const { id } = req.params
+            console.log(id)
+            //step2: database (eventsCollection) theke specific data niye asbo 
+            const result = await eventsCollection.findOne({ _id: new ObjectId(id) })
+            //step3: data ke client k pathabo
+            res.send(result)
+        })
 
 
         //POST api method use kore data servere anbo and mongo db te add korbo [insertMany(), insertOne()] method diye.
@@ -59,11 +66,15 @@ app.get('/events/:id', async(req,res)=>{
             res.send(result)
         })
 
+        // joined events page er jonno 
+        app.post('/joined-events', async (req, res) => {
+            const joinedEventData = req.body;
+            console.log(joinedEventData)
+            const result = await joinedEventsCollection.insertOne(joinedEventData)
+            res.send(result)
+        })
 
-
-
-
-
+       
 
 
 

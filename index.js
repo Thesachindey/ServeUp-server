@@ -99,7 +99,7 @@ async function run() {
             res.send(result)
         }
         )
-//----------------------for cancel joined event----------------
+//----------------------for cancel joined event---------------
         app.delete("/joined-events/:id", async (req, res) => {
             const { id } = req.params;
             const result = await joinedEventsCollection.deleteOne({ _id: new ObjectId(id) });

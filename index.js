@@ -87,50 +87,65 @@ async function run() {
         // ---------------
         app.get('/joined-events', async (req, res) => {
             //step1: database (joinedEventsCollection) theke data niye asbo 
-            const result = await joinedEventsCollection.find().sort({  eventDate: "desc" }).toArray();
+            const result = await joinedEventsCollection.find().sort({ eventDate: "desc" }).toArray();
             //step2: data ke client k pathabo
             res.send(result)
         })
-       
-        
+
+        //----------------for my joined events page----------------
+        app.get("/my-joined-events", async (req, res) => {
+            const email = req.query.email
+            const result = await joinedEventsCollection.find({ userEmail: email }).sort({ eventDate: "desc" }).toArray()
+            res.send(result)
+        }
+        )
+//----------------------for cancel joined event----------------
+        app.delete("/joined-events/:id", async (req, res) => {
+            const { id } = req.params;
+            const result = await joinedEventsCollection.deleteOne({ _id: new ObjectId(id) });
+            res.send({
+                success: true,
+                result,
+            });
+        });
 //------------------for manage my created events page---------------
 
 
-    app.get("/my-events",  async(req, res) => {
-      const email = req.query.email
-      const result = await eventsCollection.find({createdBy: email}).toArray()
-      res.send(result)
-    })
+    app.get("/my-events", async (req, res) => {
+            const email = req.query.email
+            const result = await eventsCollection.find({ createdBy: email }).toArray()
+            res.send(result)
+        })
 
 
 
 //---------for update event page----------------
- app.put("/events/:id",  async (req, res) => {
-      const { id } = req.params;
-      const data = req.body;
-      // console.log(id)
-      // console.log(data)
-      const objectId = new ObjectId(id);
-      const filter = { _id: objectId };
-      const update = {
-        $set: data,
-      };
+ app.put("/events/:id", async (req, res) => {
+            const { id } = req.params;
+            const data = req.body;
+            // console.log(id)
+            // console.log(data)
+            const objectId = new ObjectId(id);
+            const filter = { _id: objectId };
+            const update = {
+                $set: data,
+            };
 
-      const result = await eventsCollection.updateOne(filter, update);
-      res.send({
-        success: true,
-        result,
-      });
-    });
-//----------------for delete event----------------
-app.delete("/events/:id",  async (req, res) => {
-      const { id } = req.params;
-      const result = await eventsCollection.deleteOne({ _id: new ObjectId(id) });
-      res.send({
-        success: true,
-        result,
-      });
-    });
+            const result = await eventsCollection.updateOne(filter, update);
+            res.send({
+                success: true,
+                result,
+            });
+        });
+        //----------------for delete event----------------
+        app.delete("/events/:id", async (req, res) => {
+            const { id } = req.params;
+            const result = await eventsCollection.deleteOne({ _id: new ObjectId(id) });
+            res.send({
+                success: true,
+                result,
+            });
+        });
 
 
 
